@@ -1,0 +1,52 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "installDir": "${sourceDir}/install/${presetName}"
+    },
+    {
+      "name": "windows-mingw-debug",
+      "displayName": "MinGW GCC Debug",
+      "description": "Debug build using MinGW GCC and Makefiles",
+      "generator": "MinGW Makefiles",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "name": "windows-mingw-release",
+      "displayName": "MinGW GCC Release",
+      "description": "Optimized release build using MinGW GCC and Makefiles",
+      "generator": "MinGW Makefiles",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "windows-mingw-debug",
+      "configurePreset": "windows-mingw-debug",
+      "displayName": "Build MinGW Debug",
+      "targets": ["MutualMind"]
+    },
+    {
+      "name": "windows-mingw-release",
+      "configurePreset": "windows-mingw-release",
+      "displayName": "Build MinGW Release",
+      "targets": ["MutualMind"]
+    }
+  ]
+}

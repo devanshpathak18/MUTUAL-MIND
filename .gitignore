@@ -1,0 +1,53 @@
+# ── Build Artifacts ──
+build/
+bin/
+out/
+target/
+*.exe
+*.out
+*.app
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+
+# ── CMake Generated Files ──
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+compile_commands.json
+CTestTestfile.cmake
+Testing/
+*.cmake.in
+
+# ── IDE & Editor Configuration ──
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.vs/
+*.suo
+*.user
+*.idb
+*.pdb
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Operating System Junk ──
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ── Database & Local Runtime Data ──
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+*.log
