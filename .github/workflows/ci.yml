@@ -1,0 +1,73 @@
+name: MutualMind CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    name: Build & Smoke Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure CMake (Linux)
+        if: runner.os == 'Linux'
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Configure CMake (Windows)
+        if: runner.os == 'Windows'
+        run: cmake -B build
+
+      - name: Build MutualMind
+        run: cmake --build build --config Release
+
+      - name: Run Smoke Test (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          echo "3" | ./build/MutualMind
+
+      - name: Run Smoke Test (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          "3" | .\build\Release\MutualMind.exe
+
+      - name: Prepare Artifacts (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p dist-linux
+          cp build/MutualMind dist-linux/
+          cp -r data dist-linux/
+
+      - name: Prepare Artifacts (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist-windows
+          Copy-Item -Path build\Release\MutualMind.exe -Destination dist-windows\
+          Copy-Item -Path data -Destination dist-windows\ -Recurse
+
+      - name: Upload Binary Artifact (Linux)
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: MutualMind-Linux-x64
+          path: dist-linux/
+          retention-days: 14
+
+      - name: Upload Binary Artifact (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: MutualMind-Windows-x64
+          path: dist-windows/
+          retention-days: 14
