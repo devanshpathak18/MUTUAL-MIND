@@ -1,274 +1,229 @@
-# MutualMind — Master Learning Progression & Resume-Building Roadmap
+# MutualMind — Roadmap
 
-> **Philosophy:** Learn by building. Each milestone teaches you a fundamental computer science and C++ engineering concept, immediately applies it to the codebase, and unlocks a verified bullet point on your resume.
+MutualMind is a C++ console app for young investors: a risk quiz, fund suggestions, and SIP projections. I'm rebuilding it level by level to learn modern C++ and real software engineering practice. Each level introduces a few concepts, applies them to the codebase, and ends with a working, tested build.
 
----
-
-## 🧭 Your Path from Student C++ to Industry-Ready Software Engineer
-
-```mermaid
-flowchart TD
-    L1["Level 1: Modern C++ Idioms & Memory Safety\n(Smart Pointers, std::optional, RAII)"]
-    L2["Level 2: Testing Rigor & CI/CD\n(Catch2, ASan, GitHub Actions)"]
-    L3["Level 3: Software Design Patterns\n(Strategy Pattern, Factory Method, SOLID)"]
-    L4["Level 4: Quantitative Algorithms & Math\n(Monte Carlo, <random>, Newton-Raphson XIRR)"]
-    L5["Level 5: Security & Database Persistence\n(SHA-256, SQLite3, Repository Pattern)"]
-    L6["Level 6: Networking & Real-World Data\n(REST API, JSON, libcurl/CPR, Caching)"]
-    L7["Level 7: File Serialization & Reporting\n(CSV & Styled HTML Reports)"]
-    L8["Level 8: Interactive GUI Application\n(Dear ImGui Desktop Dashboard)"]
-
-    L1 --> L2
-    L2 --> L3
-    L3 --> L4
-    L4 --> L5
-    L5 --> L6
-    L6 --> L7
-    L7 --> L8
-```
+- Ideas I haven't committed to yet: [ideas.md](ideas.md)
+- What changed and why, task by task: [changes.md](changes.md)
 
 ---
 
-## 📚 Master Curriculum (Priority & Step-by-Step Progression)
+## Timeline
+
+Started 29 Sep 2026. Pace: roughly 1–1.5 hours a day alongside college and DSA practice.
+
+| Weeks | Level | Target (approx.) | Status |
+| :---: | :--- | :--- | :--- |
+| 1–2 | Level 1 — Modern C++ idioms & memory safety | 12 Oct 2026 | In progress (first pass done, polish task 1 of 9 done) |
+| 3–4 | Level 2 — Testing, tooling & CI | 26 Oct 2026 | CI build workflow exists |
+| 5–6 | Level 3 — Design patterns & architecture | 9 Nov 2026 | Not started |
+| 7–8 | Level 4 — Simulation engine & concurrency | 23 Nov 2026 | Not started |
+| — | **Checkpoint v1.0 — ready for early applications** | 23 Nov 2026 | |
+| 9–10 | Level 5 — Persistence & password security | 7 Dec 2026 | Not started |
+| 11–12 | Level 6 — Live data & networking | 21 Dec 2026 | Not started |
+| 13 | **Release v2.0** | 28 Dec 2026 | |
+| 14–15 | Level 7 — Reports | 11 Jan 2027 | Not started |
+| 16–20 | Level 8 — Desktop dashboard (Dear ImGui) | 15 Feb 2027 | Not started |
+| 21 | **Release v3.0** | 22 Feb 2027 | |
+| 22–24 | Buffer — exams, DSA, polish | 15 Mar 2027 | |
+
+If a level runs late, the buffer absorbs it. When scope has to be cut, it comes out of Levels 7–8, never out of testing.
 
 ---
 
-### 🟢 Level 1: Modern C++ Idioms, Memory Safety & RAII
-* **Priority:** `P0` (Essential Foundation)
-* **Theme:** Transitioning from "C-with-classes" to idiomatic C++17.
+## How every level ends (exit criteria)
 
-#### 1. What You Will Learn
-* **RAII (Resource Acquisition Is Initialization):** Why manual resource management is dangerous and how C++ handles automatic cleanup through deterministic destructors.
-* **Smart Pointers (`std::unique_ptr` & `std::shared_ptr`):** Expressing clear ownership semantics without raw pointers.
-* **Modern Standard Library Utilities:**
-  - `std::optional<T>`: How to represent "value or nothing" safely instead of error codes or sentinel values.
-  - `std::string_view`: Zero-allocation read-only string slices.
-  - Move semantics (`std::move`): Avoiding expensive deep copies.
+A level is done only when all of these are true:
 
-#### 2. Best Free Learning Resources
-* [LearnCpp.com — Chapter 19: Move Semantics & Smart Pointers](https://www.learncpp.com/cpp-tutorial/introduction-to-smart-pointers-move-semantics/)
-* [LearnCpp.com — Chapter 16: std::optional](https://www.learncpp.com/cpp-tutorial/stdoptional/)
-
-#### 3. Hands-On Application in MutualMind
-* Refactor [UserAuth](file:///c:/Users/A/OneDrive/Desktop/MUTUAL%20MIND/src/UserAuth.cpp) and lookup methods to return `std::optional<User>` instead of boolean flags.
-* Replace raw string copies with `const std::string&` and `std::string_view` where appropriate.
-* Wrap all dynamically managed entities in `std::unique_ptr`.
-
-#### 4. Resume & Interview Value
-* **Interview Question You Can Answer:** *"What is RAII, and why does modern C++ forbid manual `new`/`delete` in application code?"*
-* **Resume Bullet:** *Refactored legacy memory management to modern C++17 RAII standards utilizing smart pointers (`std::unique_ptr`) and `std::optional` to guarantee zero resource leaks.*
+1. **Clean build and green tests.** Zero warnings on GCC and MSVC; all tests pass in CI (from Level 2 onward).
+2. **changes.md entry written by me.** What changed, why, alternatives I considered, and mistakes I made along the way.
+3. **Explain-back.** I can explain every change without notes — checked with a 10-minute mock interview on that level.
+4. **Honest history.** One commit per task in my own words; the finished level is tagged (`v0.1-level1`, `v0.2-level2`, …).
 
 ---
 
-### 🟢 Level 2: Test-Driven Development (TDD) & CI/CD Automation
-* **Priority:** `P0` (Critical Engineering Rigor)
-* **Theme:** Never break working code; prove correctness automatically.
+## Level 1 — Modern C++ Idioms & Memory Safety
 
-#### 1. What You Will Learn
-* **Modern CMake Architecture:** How to use `FetchContent` to download and link third-party libraries automatically without manually placing header files.
-* **Unit Testing Principles:** Writing deterministic test cases, testing boundary conditions (e.g., negative amounts, 0% interest, boundary scores).
-* **AddressSanitizer (ASan):** How compiler sanitizers catch buffer overflows, memory leaks, and undefined behavior at runtime.
-* **Continuous Integration (CI):** Setting up automated multi-platform builds using GitHub Actions.
+**Goal:** write idiomatic C++17 instead of "C with classes".
 
-#### 2. Best Free Learning Resources
-* [Catch2 Official Tutorial & Quickstart](https://github.com/catchorg/Catch2/blob/devel/docs/tutorial.md)
-* [GitHub Actions for C/C++ by GitHub Docs](https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net)
+**Concepts:** RAII · Rule of Zero · ownership (stack object vs `std::unique_ptr`) · `std::optional` · `std::string_view` · move semantics · compiler warnings
 
-#### 3. Hands-On Application in MutualMind
-* Add Catch2 to [CMakeLists.txt](file:///c:/Users/A/OneDrive/Desktop/MUTUAL%20MIND/CMakeLists.txt) using `FetchContent`.
-* Create a dedicated `tests/` directory with:
-  - `Test_FinanceMath.cpp`: Edge cases for `calculateFutureValue()` (0% interest, large values, 40-year horizons).
-  - `Test_RiskAssessor.cpp`: Boundary score verification for `Conservative`, `Moderate`, `Aggressive`.
-* Configure `-fsanitize=address,undefined` in debug builds.
-* Add `.github/workflows/ci.yml` so every git push runs your tests on Ubuntu and Windows.
+**Tasks**
+- [x] First pass: `loginUser()` returns `std::optional<User>`, `string_view` in lookups, move-constructed `User`
+- [x] 1. Enable compiler warnings (`-Wall -Wextra -Wpedantic` / `/W4 /permissive-`)
+- [ ] 2. Upgrade toolchain to MSYS2 (UCRT64) GCC, update CMake presets, remove `Compat.h`
+- [ ] 3. Rule of Zero — remove user-declared destructors that suppress move operations
+- [ ] 4. Let RAII close file streams (drop manual `close()` calls)
+- [ ] 5. Remove leftover `UserAuth` state; apply `string_view` and `const` consistently
+- [ ] 6. Sink-parameter move pattern in `Person` / `Investor` / `MutualFund`
+- [ ] 7. Stack object vs `unique_ptr<Investor>` — decide, and correct the Level 1 notes
+- [ ] 8. Fix the EOF infinite loop in `readValidated`; bounds-check `getMonthName`
+- [ ] 9. Stop tracking `data/users.txt` in git; ship an example file instead
 
-#### 4. Resume & Interview Value
-* **Interview Question You Can Answer:** *"How do you verify edge cases in financial calculations, and how do you ensure code stability across pull requests?"*
-* **Resume Bullet:** *Architected an automated testing pipeline using **Catch2** and **GitHub Actions CI**, enforcing regression prevention and zero memory leaks via **AddressSanitizer (ASan)**.*
+> **Why the toolchain upgrade comes early:** the current compiler is MinGW.org GCC 6.3 (2016, 32-bit, `win32` thread model). It has no `std::thread` (needed in Level 4) and no sanitizer support (needed in Level 2).
 
----
-
-### 🟢 Level 3: Real-World Design Patterns (GoF) & Architecture
-* **Priority:** `P0` (Architecture & SOLID Principles)
-* **Theme:** Writing flexible, modular, extensible code instead of rigid `if/else` blocks.
-
-#### 1. What You Will Learn
-* **Strategy Pattern:** How to define a family of algorithms, encapsulate each one, and make them interchangeable at runtime.
-* **Factory Method Pattern:** How to decouple object creation from object usage.
-* **Open/Closed Principle (OCP):** Designing code that is *open for extension* (new strategies) but *closed for modification* (existing code doesn't change).
-
-#### 2. Best Free Learning Resources
-* [Refactoring.Guru — Strategy Pattern in C++](https://refactoring.guru/design-patterns/strategy/cpp/example)
-* [Refactoring.Guru — Factory Method Pattern in C++](https://refactoring.guru/design-patterns/factory-method/cpp/example)
-
-#### 3. Hands-On Application in MutualMind
-* Replace the hardcoded `RiskProfile` table with an abstract strategy interface:
-  ```cpp
-  class IAllocationStrategy {
-  public:
-      virtual ~IAllocationStrategy() = default;
-      virtual AssetAllocation calculateAllocation(double monthlyAmount, int age) const = 0;
-      virtual std::string getStrategyName() const = 0;
-  };
-  ```
-* Implement concrete strategies:
-  - `ConservativeStrategy` (Debt-heavy)
-  - `ModerateStrategy` (Balanced Hybrid)
-  - `AggressiveStrategy` (Equity/Small-cap heavy)
-  - `AgeBasedGlideslopeStrategy` (Dynamic: Equity % = $100 - \text{Age}$)
-* Implement `AllocationStrategyFactory` that returns `std::unique_ptr<IAllocationStrategy>`.
-
-#### 4. Resume & Interview Value
-* **Interview Question You Can Answer:** *"How would you design a portfolio recommendation engine such that a product manager can add 10 new investment profiles without altering existing codebase logic?"*
-* **Resume Bullet:** *Engineered an extensible portfolio allocation engine leveraging the **GoF Strategy & Factory patterns**, decoupling business logic from presentation and adhering to SOLID design principles.*
+**Resources**
+- [LearnCpp — Smart pointers & move semantics](https://www.learncpp.com/cpp-tutorial/introduction-to-smart-pointers-move-semantics/)
+- [LearnCpp — std::optional](https://www.learncpp.com/cpp-tutorial/stdoptional/)
+- [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines) — R.5 (prefer scoped objects), C.20 (Rule of Zero)
+- [MSYS2](https://www.msys2.org/)
 
 ---
 
-### 🟡 Level 4: Quantitative Algorithms & Probabilistic Modeling
-* **Priority:** `P1` (Quantitative Edge)
-* **Theme:** Replacing toy compound interest with realistic stochastic modeling.
+## Level 2 — Testing, Tooling & CI
 
-#### 1. What You Will Learn
-* **Monte Carlo Simulation:** Why static return projections (e.g. "you get 12% every year") fail in the real world, and how randomized walk simulations model volatility.
-* **Modern C++ `<random>` Library:** Why `rand()` is considered harmful; how to use `std::mt19937` (Mersenne Twister) and `std::normal_distribution` for statistically sound simulations.
-* **Numerical Methods (Newton-Raphson):** How root-finding algorithms solve for internal rate of return (XIRR) when equations cannot be solved analytically.
-* **Step-Up SIP & Real vs Nominal Purchasing Power:** Modeling inflation and annual salary step-ups.
+**Goal:** prove correctness automatically on every push.
 
-#### 2. Best Free Learning Resources
-* [LearnCpp.com — Generating Random Numbers using `<random>`](https://www.learncpp.com/cpp-tutorial/generating-random-numbers-using-mersenne-twister/)
-* [Khan Academy / Brilliant — Monte Carlo Methods](https://en.wikipedia.org/wiki/Monte_Carlo_method)
+**Concepts:** unit tests & boundary cases · testability shaping design · CMake libraries and `PUBLIC`/`PRIVATE` · `FetchContent` · sanitizers · static analysis & formatting · CI
 
-#### 3. Hands-On Application in MutualMind
-* Create `MonteCarloSimulator` class:
-  - Runs **1,000 to 10,000 simulation paths** based on historical mean ($\mu$) and standard deviation ($\sigma$).
-  - Outputs the **10th percentile (Bear Market)**, **50th percentile (Median)**, and **90th percentile (Bull Market)**.
-  - Calculates probability of capital loss: $P(\text{Final Value} < \text{Invested Amount})$.
-* Implement **Step-Up SIP calculation** (annual increment of $+X\%$).
+**Tasks**
+- [x] GitHub Actions build on Ubuntu + Windows (done early)
+- [ ] Split into a `mutualmind_core` library + `MutualMind` CLI executable
+- [ ] Separate quiz scoring from console input so `RiskAssessor` can be tested
+- [ ] Add Catch2 v3 via `FetchContent`; `tests/` covering `FinanceMath` (0% rate, 40-year horizon, number formatting incl. negatives) and risk-score boundaries
+- [ ] Run tests in CI (`ctest`) on both platforms
+- [ ] AddressSanitizer + UndefinedBehaviorSanitizer job in Linux CI
+- [ ] Warnings as errors in CI only (`-Werror` / `/WX`)
+- [ ] `.clang-format` + format check in CI; `clang-tidy` with a small, deliberate check set
+- [ ] Coverage report (gcov/lcov) — record the real percentage
 
-#### 4. Resume & Interview Value
-* **Interview Question You Can Answer:** *"How do you simulate market uncertainty in an investment projection, and why is `std::mt19937` preferred over `rand()`?"*
-* **Resume Bullet:** *Developed a **Monte Carlo simulation engine** utilizing C++ `<random>` normal distributions to project 10,000+ probabilistic investment paths, delivering 10th/50th/90th percentile risk analysis.*
+**Resources**
+- [Catch2 tutorial](https://github.com/catchorg/Catch2/blob/devel/docs/tutorial.md)
+- [AddressSanitizer wiki](https://github.com/google/sanitizers/wiki/AddressSanitizer)
+- [clang-tidy](https://clang.llvm.org/extra/clang-tidy/)
+- [GitHub Actions docs](https://docs.github.com/en/actions)
 
 ---
 
-### 🟡 Level 5: Security, Persistence & Relational Databases
-* **Priority:** `P1` (Production Data Handling)
-* **Theme:** Moving from plaintext file parsing to real relational databases and cryptography.
+## Level 3 — Design Patterns & Architecture
 
-#### 1. What You Will Learn
-* **Cryptographic Security Basics:** Why passwords must never be stored in plaintext or reversible encryption; the role of **hashing** and **cryptographic salt** (preventing rainbow table attacks).
-* **Embedded Relational Databases (SQLite3):** How embedded SQL databases operate, ACID transactions, and why they outperform raw text files.
-* **The Repository Pattern:** Decoupling the data layer (`IUserRepository`) from the domain layer so storage backends can be swapped without touching business logic.
-* **RAII SQLite Wrappers:** Wrapping `sqlite3*` and `sqlite3_stmt*` so queries automatically finalize and database handles close even if an exception occurs.
+**Goal:** add new behaviour by adding code, not by editing existing code.
 
-#### 2. Best Free Learning Resources
-* [SQLite C/C++ Tutorial & Official API Reference](https://www.sqlite.org/cintro.html)
-* [Computerphile: Password Hashing & Salts (YouTube)](https://www.youtube.com/watch?v=8ZtInClt1FE)
+**Concepts:** Strategy · Factory Method · Repository · dependency inversion · Open/Closed principle · where `unique_ptr` genuinely belongs (owning polymorphic objects)
 
-#### 3. Hands-On Application in MutualMind
-* Replace [UserAuth.cpp](file:///c:/Users/A/OneDrive/Desktop/MUTUAL%20MIND/src/UserAuth.cpp) text file parsing with:
-  - A cryptographic utility to compute salted SHA-256 digests.
-  - SQLite database `mutualmind.db` with structured tables (`users`, `portfolios`).
-* Implement `IUserRepository` interface and `SqliteUserRepository` class using prepared statements (`sqlite3_prepare_v2`, `sqlite3_bind_*`, `sqlite3_step`) with zero SQL injection risk.
+**Tasks**
+- [ ] `IAllocationStrategy` with Conservative / Moderate / Aggressive implementations
+- [ ] Make allocations and fund picks consistent (every asset class in the split gets a matching fund)
+- [ ] `AllocationStrategyFactory` returning `std::unique_ptr<IAllocationStrategy>`
+- [ ] `IUserRepository` + `FileUserRepository`; `UserAuth` depends only on the interface
+- [ ] Tests for each strategy; tests for auth using an in-memory fake repository
+- [ ] Optional: `AgeBasedStrategy` (equity ≈ 100 − age) — proof that a new strategy is a new class with no edits elsewhere
 
-#### 4. Resume & Interview Value
-* **Interview Question You Can Answer:** *"How do you prevent SQL and delimiter injection in data persistence, and how do you store user credentials securely in C++?"*
-* **Resume Bullet:** *Implemented a secure authentication and persistence layer utilizing **SQLite3** and **salted SHA-256 hashing**, applying the **Repository Pattern** and RAII query wrappers for safe resource management.*
+**Resources**
+- [Refactoring.Guru — Strategy in C++](https://refactoring.guru/design-patterns/strategy/cpp/example)
+- [Refactoring.Guru — Factory Method in C++](https://refactoring.guru/design-patterns/factory-method/cpp/example)
 
 ---
 
-### 🟡 Level 6: Networking, REST APIs & JSON Serialization
-* **Priority:** `P1` (Distributed & Connected Systems)
-* **Theme:** Ingesting live financial data from the internet.
+## Level 4 — Simulation Engine & Concurrency
 
-#### 1. What You Will Learn
-* **HTTP & REST Protocols:** Handling HTTP GET requests, status codes (200, 404, 500), and network error handling in C++.
-* **Network Libraries (`cpr` or `libcurl`):** Making synchronous and asynchronous web requests in modern C++.
-* **JSON Parsing (`nlohmann/json`):** Deserializing structured nested JSON responses into C++ structs.
-* **Tiered Caching Strategy:** Memory Cache $\rightarrow$ SQLite Offline Database $\rightarrow$ Network Request.
+**Goal:** replace a single fixed-rate projection with a range of likely outcomes, and make it fast.
 
-#### 2. Best Free Learning Resources
-* [CPR: C++ Requests (Documentation & Tutorial)](https://docs.libcpr.org/)
-* [nlohmann/json GitHub & Documentation](https://github.com/nlohmann/json)
+**Concepts:** `<random>` (`std::mt19937`, `std::normal_distribution`) and why not `rand()` · Monte Carlo simulation · percentiles · `std::thread`, data races, one RNG per thread · benchmarking · CSV output
 
-#### 3. Hands-On Application in MutualMind
-* Connect to public financial endpoints (e.g., [mfapi.in](https://www.mfapi.in/) for live Indian Mutual Fund NAVs).
-* Fetch historical 3-year NAV time-series.
-* Calculate empirical statistics from real data:
-  - **Standard Deviation ($\sigma$):** Real fund volatility.
-  - **Sharpe Ratio:** True risk-adjusted returns against a risk-free benchmark rate.
-  - **Maximum Drawdown (MDD):** The largest drop from historical peak to trough.
-* Cache the downloaded NAV data in SQLite so the app works seamlessly offline.
+**Tasks**
+- [ ] `MonteCarloSimulator`: N paths using an *assumed* monthly mean and volatility per profile (replaced with real data in Level 6)
+- [ ] Report 10th / 50th / 90th percentile outcomes and the probability of ending below the amount invested
+- [ ] Seedable RNG so tests are deterministic
+- [ ] Parallelise across threads; benchmark 1 thread vs N threads and record the machine + numbers
+- [ ] Step-up SIP (contribution grows X% per year)
+- [ ] CSV export of the SIP schedule and simulation percentiles
+- [ ] Optional: XIRR using Newton-Raphson
 
-#### 4. Resume & Interview Value
-* **Interview Question You Can Answer:** *"How do you design an offline-first caching layer when consuming third-party REST APIs in a native application?"*
-* **Resume Bullet:** *Built a resilient network ingestion subsystem with **`cpr` (libcurl)** and **`nlohmann/json`**, fetching real-time NAV time-series to compute historical volatility, Sharpe Ratio, and Maximum Drawdown with local SQLite caching.*
+**Resources**
+- [LearnCpp — Random numbers with Mersenne Twister](https://www.learncpp.com/cpp-tutorial/generating-random-numbers-using-mersenne-twister/)
+- [cppreference — std::thread](https://en.cppreference.com/w/cpp/thread/thread)
+- [Wikipedia — Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method)
 
 ---
 
-### 🔵 Level 7: Data Serialization & Multi-Format Reporting
-* **Priority:** `P2` (Product Usability)
-* **Theme:** Generating clean, professional reports for users.
+## Checkpoint v1.0 — Ready for Early Applications
 
-#### 1. What You Will Learn
-* **Structured File Serialization:** Formatting tabular data to compliant RFC 4180 CSV files.
-* **HTML/CSS Templating:** Dynamically assembling an HTML report from C++ strings and embedding responsive CSS for printable PDF rendering.
-
-#### 2. Hands-On Application in MutualMind
-* Implement `ReportExporter`:
-  - `exportToCSV(const std::string& filepath)`: Exports monthly SIP progression and Monte Carlo percentiles.
-  - `exportToHTML(const std::string& filepath)`: Generates a self-contained portfolio summary report with summary metric cards, fund tables, and an interactive print stylesheet (`@media print`).
-
-#### 3. Resume & Interview Value
-* **Resume Bullet:** *Created an automated reporting engine generating structured CSV datasets and styled standalone HTML/PDF investment summaries for user portfolio tracking.*
+- [ ] README rewritten in my own words: what it does, how to build it, design decisions, measured numbers
+- [ ] Short terminal demo GIF in the README
+- [ ] Tag `v1.0` and publish a GitHub release with the CI-built binaries
+- [ ] Resume entry drafted only from what is actually done
 
 ---
 
-### 🔵 Level 8: Interactive GUI Application (Dear ImGui)
-* **Priority:** `P2` (The Visual "Showstopper")
-* **Theme:** Giving your project an intuitive, interactive visual interface.
+## Level 5 — Persistence & Password Security
 
-#### 1. What You Will Learn
-* **Immediate-Mode GUI (IMGUI) Architecture:** How Dear ImGui differs from traditional retained-mode GUI frameworks (Qt, WinForms, web DOM); rendering frames in a game loop.
-* **Graphics Contexts & Event Loops:** Initializing GLFW and OpenGL/DirectX in C++.
-* **Real-time Visualization:** Plotting mathematical distributions and bar/pie graphs dynamically as sliders move.
+**Goal:** store data safely.
 
-#### 2. Best Free Learning Resources
-* [Dear ImGui GitHub & Examples](https://github.com/ocornut/imgui)
-* [ImPlot (Extension for charts and plots)](https://github.com/epezent/implot)
+**Concepts:** why passwords need a slow hash (Argon2id) rather than a fast one like SHA-256 · salts · SQLite, prepared statements, transactions · RAII wrappers around C APIs
 
-#### 3. Hands-On Application in MutualMind
-* Build an intuitive desktop dashboard:
-  - Sliders for monthly investment, risk quiz, tenure, and expected returns.
-  - Real-time live updating graph of the Monte Carlo simulation curves using **ImPlot**.
-  - Interactive asset allocation pie/bar visualization.
-* Record a 15-second high-quality GIF of this dashboard to put at the top of your GitHub README.
+**Tasks**
+- [ ] RAII wrappers for `sqlite3*` and `sqlite3_stmt*`
+- [ ] `SqliteUserRepository` implementing `IUserRepository` — swapped in without touching `UserAuth`
+- [ ] Hash passwords with Argon2id via libsodium (`crypto_pwhash_str` / `crypto_pwhash_str_verify`)
+- [ ] Prepared statements only — no SQL built from strings
+- [ ] One-time import of existing users from the old text file (hashing on import)
+- [ ] Tests against an in-memory database (`:memory:`)
 
-#### 4. Resume & Interview Value
-* **Resume Bullet:** *Designed an interactive real-time desktop dashboard using **Dear ImGui** and **OpenGL**, enabling live scenario modeling with dynamic Monte Carlo distribution plots.*
+**Resources**
+- [SQLite C/C++ interface intro](https://www.sqlite.org/cintro.html)
+- [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)
+- [libsodium documentation](https://doc.libsodium.org/)
+- [Computerphile — How NOT to store passwords](https://www.youtube.com/watch?v=8ZtInClt1FE)
 
 ---
 
-## 📅 Summary of Your Learning Checklist
+## Level 6 — Live Data & Networking
 
-| Level | Topic | Core Tech Learned | Status |
-| :---: | :--- | :--- | :---: |
-| **1** | Modern C++ & Memory Safety | `std::unique_ptr`, `std::optional`, RAII, Move Semantics | **Completed** |
-| **2** | Testing & CI/CD | Catch2 v3, CMake `FetchContent`, ASan, GitHub Actions | **Ready** |
-| **3** | GoF Design Patterns | Strategy Pattern, Factory Pattern, SOLID Principles | Next |
-| **4** | Quantitative Math | Monte Carlo, `<random>` normal distributions, Newton-Raphson | Next |
-| **5** | Security & Databases | Salted SHA-256, SQLite3 C API, Repository Pattern | Next |
-| **6** | Networking & APIs | `cpr` (libcurl), `nlohmann/json`, HTTP Caching, Sharpe/MDD | Next |
-| **7** | Export Subsystem | CSV generation, Self-contained HTML/CSS Reports | Next |
-| **8** | Interactive GUI | Dear ImGui, OpenGL/GLFW, ImPlot, Event Loop | Next |
+**Goal:** base recommendations and simulations on real fund data.
+
+**Concepts:** HTTP/REST, status codes, timeouts and failure handling · JSON parsing · caching and offline fallback · volatility, Sharpe ratio, maximum drawdown
+
+**Tasks**
+- [ ] Fetch NAV history from [mfapi.in](https://www.mfapi.in/) with `cpr`
+- [ ] Parse responses with `nlohmann/json` into plain structs
+- [ ] Cache in SQLite; work offline from the cache; refresh when stale
+- [ ] Compute annualised return, volatility, Sharpe ratio and maximum drawdown from real NAV data
+- [ ] Feed the real mean and volatility into the Monte Carlo engine (replacing Level 4's assumptions)
+- [ ] Tests use saved JSON fixtures — no network access in tests
+
+**Resources**
+- [cpr documentation](https://docs.libcpr.org/)
+- [nlohmann/json](https://github.com/nlohmann/json)
 
 ---
 
-## 🚀 How We Will Work Together
+## Release v2.0
 
-Whenever you are ready to begin, simply tell me:
-> *"Let's start Level 1: Modern C++ and Smart Pointers."*
+- [ ] README and changes.md up to date; tag `v2.0`; release binaries
 
-I will:
-1. **Explain the concepts simply** with short, crystal-clear code examples.
-2. **Guide you through refactoring** the existing code in MutualMind step-by-step.
-3. **Show you how to test it**, verify it, and add it to your portfolio.
+---
+
+## Level 7 — Reports
+
+**Goal:** output a user can keep or share.
+
+**Tasks**
+- [ ] Self-contained HTML report: summary, allocation, projection table, simulation percentiles
+- [ ] Print-friendly CSS (`@media print`)
+- [ ] Escape user-provided text in the HTML
+- [ ] Tests on the generated output
+
+---
+
+## Level 8 — Desktop Dashboard (Dear ImGui)
+
+**Goal:** a visual front end on top of the same core library.
+
+**Concepts:** immediate-mode GUI · render loop · GLFW + OpenGL setup · ImPlot charts
+
+**Tasks**
+- [ ] GLFW + OpenGL + Dear ImGui window linked to `mutualmind_core` (no logic duplicated in the GUI)
+- [ ] Sliders for SIP amount, duration and risk profile
+- [ ] Live projection chart and Monte Carlo percentile bands (ImPlot)
+- [ ] Allocation chart
+- [ ] Demo GIF at the top of the README
+
+**Resources**
+- [Dear ImGui](https://github.com/ocornut/imgui)
+- [ImPlot](https://github.com/epezent/implot)
+
+---
+
+## Release v3.0
+
+- [ ] README and changes.md up to date; tag `v3.0`; release binaries

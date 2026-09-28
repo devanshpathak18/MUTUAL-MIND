@@ -1,5 +1,7 @@
 # MutualMind — Fund Advisor
 
+[![MutualMind CI/CD](https://github.com/devanshpathak18/MUTUAL-MIND/actions/workflows/ci.yml/badge.svg)](https://github.com/devanshpathak18/MUTUAL-MIND/actions/workflows/ci.yml)
+
 An OOP-based C++ console application that helps young investors understand mutual funds, assess their risk profile, and get personalised fund recommendations with SIP projections.
 
 ## Features
