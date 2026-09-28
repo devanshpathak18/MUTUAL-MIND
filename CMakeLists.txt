@@ -19,6 +19,13 @@ set(SOURCES
 # ── Target definition ──
 add_executable(MutualMind ${SOURCES})
 
+# ── Compiler warnings (per-target, per-compiler) ──
+if(MSVC)
+    target_compile_options(MutualMind PRIVATE /W4 /permissive-)
+else()
+    target_compile_options(MutualMind PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
 # ── Modern target-based include directories ──
 target_include_directories(MutualMind PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
