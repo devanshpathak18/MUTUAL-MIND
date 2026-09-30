@@ -11,10 +11,10 @@ What changed in the codebase, task by task, and why — including the alternativ
 - [Level 1: Modern C++ Idioms, Memory Safety & RAII](#level-1-modern-c-idioms-memory-safety--raii) — in progress (first pass done, polish ongoing)
 - [Level 2: Testing, Tooling & CI](#level-2-testing-tooling--ci) — CI build workflow exists
 - Level 3: Design Patterns & Architecture — not started
-- Level 4: Simulation Engine & Concurrency — not started
-- Level 5: Persistence & Password Security — not started
+- Level 4: Persistence & Password Security — not started
+- Level 5: Simulation Engine & Concurrency — not started
 - Level 6: Live Data & Networking — not started
-- Level 7: Reports — not started
+- Level 7: REST API Server — not started
 - Level 8: Desktop Dashboard (Dear ImGui) — not started
 
 ---
@@ -102,7 +102,7 @@ A review of Level 1 found gaps (Rule of Zero, manual `close()` calls, half-finis
 | 2 | Upgrade toolchain (MinGW.org GCC 6.3 → MSYS2 GCC), update presets, remove `Compat.h` | To do |
 | 3 | Rule of Zero — remove user-declared destructors | To do |
 | 4 | Let RAII close file streams | To do |
-| 5 | Remove leftover `UserAuth` state; consistent `string_view` + `const` | To do |
+| 5 | Remove leftover `UserAuth` state; consistent `string_view` + `const`; correct `main.cpp` header comment | To do |
 | 6 | Sink-parameter move pattern in `Person` / `Investor` / `MutualFund` | To do |
 | 7 | Stack object vs `unique_ptr<Investor>` — decide & correct docs | To do |
 | 8 | Fix EOF infinite loop in `readValidated` + `getMonthName` bounds | To do |
@@ -141,7 +141,7 @@ A review of Level 1 found gaps (Rule of Zero, manual `close()` calls, half-finis
 * **Mistakes I made:**
   - Claimed "0 warnings" in the Level 1 notes before any warning flags were enabled.
   - First rebuild failed with a linker "Permission denied" because the previous `MutualMind.exe` was still running.
-* **Verification:** `cmake --build --preset windows-mingw-debug --clean-first` → all 6 translation units compiled with `-g -std=c++1z -Wall -Wextra -Wpedantic`: **0 errors, 0 warnings** (this time meaningful). MSVC flags not yet verified — first checked on the next CI run.
+* **Verification:** `cmake --build --preset windows-mingw-debug --clean-first` → all 6 translation units compiled with `-g -std=c++1z -Wall -Wextra -Wpedantic`: **0 errors, 0 warnings** (this time meaningful). MSVC: CI run #2 (`windows-latest`, commit `8d80805`) compiled all 6 files with `/W4 /permissive-` — **0 warnings** in the build log.
 
 ---
 

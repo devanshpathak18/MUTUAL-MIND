@@ -1,6 +1,6 @@
 # MutualMind — Fund Advisor
 
-[![MutualMind CI/CD](https://github.com/devanshpathak18/MUTUAL-MIND/actions/workflows/ci.yml/badge.svg)](https://github.com/devanshpathak18/MUTUAL-MIND/actions/workflows/ci.yml)
+[![MutualMind CI](https://github.com/devanshpathak18/MUTUAL-MIND/actions/workflows/ci.yml/badge.svg)](https://github.com/devanshpathak18/MUTUAL-MIND/actions/workflows/ci.yml)
 
 An OOP-based C++ console application that helps young investors understand mutual funds, assess their risk profile, and get personalised fund recommendations with SIP projections.
 
@@ -16,7 +16,6 @@ An OOP-based C++ console application that helps young investors understand mutua
 
 - **Inheritance** — `Investor` derives from `Person`
 - **Encapsulation** — private data + public const getters across classes
-- **Polymorphism** — virtual default destructor in base `Person`
 - **Templates** — generic `readValidated<T>()` input validation helper
 - **Data-Driven Architecture** — static tables for `RiskProfile` and `GlossaryTerm`
 - **Separation of Concerns** — domain logic / pure math separated from console I/O

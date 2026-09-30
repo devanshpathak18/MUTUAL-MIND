@@ -1,4 +1,4 @@
-name: MutualMind CI/CD Pipeline
+name: MutualMind CI
 
 on:
   push:

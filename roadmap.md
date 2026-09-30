@@ -16,15 +16,15 @@ Started 29 Sep 2026. Pace: roughly 1–1.5 hours a day alongside college and DSA
 | 1–2 | Level 1 — Modern C++ idioms & memory safety | 12 Oct 2026 | In progress (first pass done, polish task 1 of 9 done) |
 | 3–4 | Level 2 — Testing, tooling & CI | 26 Oct 2026 | CI build workflow exists |
 | 5–6 | Level 3 — Design patterns & architecture | 9 Nov 2026 | Not started |
-| 7–8 | Level 4 — Simulation engine & concurrency | 23 Nov 2026 | Not started |
-| — | **Checkpoint v1.0 — ready for early applications** | 23 Nov 2026 | |
-| 9–10 | Level 5 — Persistence & password security | 7 Dec 2026 | Not started |
+| 7–8 | Level 4 — Persistence & password security | 23 Nov 2026 | Not started |
+| — | **Checkpoint v1.0 — first release** | 23 Nov 2026 (soft target) | |
+| 9–10 | Level 5 — Simulation engine & concurrency | 7 Dec 2026 | Not started |
 | 11–12 | Level 6 — Live data & networking | 21 Dec 2026 | Not started |
 | 13 | **Release v2.0** | 28 Dec 2026 | |
-| 14–15 | Level 7 — Reports | 11 Jan 2027 | Not started |
-| 16–20 | Level 8 — Desktop dashboard (Dear ImGui) | 15 Feb 2027 | Not started |
-| 21 | **Release v3.0** | 22 Feb 2027 | |
-| 22–24 | Buffer — exams, DSA, polish | 15 Mar 2027 | |
+| 14–15 | Buffer — exams, DSA, spill-over | 11 Jan 2027 | |
+| 16–17 | Level 7 — REST API server (skipped if the buffer is used up) | 25 Jan 2027 | Not started |
+| — | Level 8 — Desktop dashboard (Dear ImGui) | Own pace, no target date | Not started |
+| — | **Release v3.0** | After Level 8 | |
 
 If a level runs late, the buffer absorbs it. When scope has to be cut, it comes out of Levels 7–8, never out of testing.
 
@@ -53,13 +53,13 @@ A level is done only when all of these are true:
 - [ ] 2. Upgrade toolchain to MSYS2 (UCRT64) GCC, update CMake presets, remove `Compat.h`
 - [ ] 3. Rule of Zero — remove user-declared destructors that suppress move operations
 - [ ] 4. Let RAII close file streams (drop manual `close()` calls)
-- [ ] 5. Remove leftover `UserAuth` state; apply `string_view` and `const` consistently
+- [ ] 5. Remove leftover `UserAuth` state; apply `string_view` and `const` consistently; correct the `main.cpp` header comment (it says all I/O lives in `main.cpp`, but most classes do their own I/O)
 - [ ] 6. Sink-parameter move pattern in `Person` / `Investor` / `MutualFund`
 - [ ] 7. Stack object vs `unique_ptr<Investor>` — decide, and correct the Level 1 notes
 - [ ] 8. Fix the EOF infinite loop in `readValidated`; bounds-check `getMonthName`
 - [ ] 9. Stop tracking `data/users.txt` in git; ship an example file instead
 
-> **Why the toolchain upgrade comes early:** the current compiler is MinGW.org GCC 6.3 (2016, 32-bit, `win32` thread model). It has no `std::thread` (needed in Level 4) and no sanitizer support (needed in Level 2).
+> **Why the toolchain upgrade comes early:** the current compiler is MinGW.org GCC 6.3 (2016, 32-bit, `win32` thread model). It has no `std::thread` (needed in Level 5) and no sanitizer support (needed in Level 2).
 
 **Resources**
 - [LearnCpp — Smart pointers & move semantics](https://www.learncpp.com/cpp-tutorial/introduction-to-smart-pointers-move-semantics/)
@@ -114,38 +114,7 @@ A level is done only when all of these are true:
 
 ---
 
-## Level 4 — Simulation Engine & Concurrency
-
-**Goal:** replace a single fixed-rate projection with a range of likely outcomes, and make it fast.
-
-**Concepts:** `<random>` (`std::mt19937`, `std::normal_distribution`) and why not `rand()` · Monte Carlo simulation · percentiles · `std::thread`, data races, one RNG per thread · benchmarking · CSV output
-
-**Tasks**
-- [ ] `MonteCarloSimulator`: N paths using an *assumed* monthly mean and volatility per profile (replaced with real data in Level 6)
-- [ ] Report 10th / 50th / 90th percentile outcomes and the probability of ending below the amount invested
-- [ ] Seedable RNG so tests are deterministic
-- [ ] Parallelise across threads; benchmark 1 thread vs N threads and record the machine + numbers
-- [ ] Step-up SIP (contribution grows X% per year)
-- [ ] CSV export of the SIP schedule and simulation percentiles
-- [ ] Optional: XIRR using Newton-Raphson
-
-**Resources**
-- [LearnCpp — Random numbers with Mersenne Twister](https://www.learncpp.com/cpp-tutorial/generating-random-numbers-using-mersenne-twister/)
-- [cppreference — std::thread](https://en.cppreference.com/w/cpp/thread/thread)
-- [Wikipedia — Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method)
-
----
-
-## Checkpoint v1.0 — Ready for Early Applications
-
-- [ ] README rewritten in my own words: what it does, how to build it, design decisions, measured numbers
-- [ ] Short terminal demo GIF in the README
-- [ ] Tag `v1.0` and publish a GitHub release with the CI-built binaries
-- [ ] Resume entry drafted only from what is actually done
-
----
-
-## Level 5 — Persistence & Password Security
+## Level 4 — Persistence & Password Security
 
 **Goal:** store data safely.
 
@@ -167,18 +136,51 @@ A level is done only when all of these are true:
 
 ---
 
+## Checkpoint v1.0 — First Release
+
+- [ ] README rewritten in my own words: what it does, how to build it, design decisions, measured numbers
+- [ ] Short terminal demo GIF in the README
+- [ ] Tag `v1.0` and publish a GitHub release with the CI-built binaries
+
+---
+
+## Level 5 — Simulation Engine & Concurrency
+
+**Goal:** replace a single fixed-rate projection with a range of likely outcomes, and make it fast.
+
+**Concepts:** `<random>` (`std::mt19937`, `std::normal_distribution`) and why not `rand()` · Monte Carlo simulation · percentiles with `std::nth_element` (quickselect) · `std::thread`, data races, one RNG per thread · thread pools and `std::condition_variable` · benchmarking · CSV output
+
+**Tasks**
+- [ ] `MonteCarloSimulator`: N paths using an *assumed* monthly mean and volatility per profile (replaced with real data in Level 6)
+- [ ] Report 10th / 50th / 90th percentile outcomes and the probability of ending below the amount invested — find each percentile with `std::nth_element` (O(n) on average) instead of sorting every path (O(n log n))
+- [ ] Seedable RNG so tests are deterministic
+- [ ] Parallelise across threads; benchmark 1 thread vs N threads and record the machine + numbers
+- [ ] Step-up SIP (contribution grows X% per year)
+- [ ] CSV export of the SIP schedule and simulation percentiles
+- [ ] Optional: reusable thread pool (task queue + `std::condition_variable`) instead of starting new threads for every simulation run
+
+**Resources**
+- [LearnCpp — Random numbers with Mersenne Twister](https://www.learncpp.com/cpp-tutorial/generating-random-numbers-using-mersenne-twister/)
+- [cppreference — std::thread](https://en.cppreference.com/w/cpp/thread/thread)
+- [cppreference — std::nth_element](https://en.cppreference.com/w/cpp/algorithm/nth_element)
+- [cppreference — std::condition_variable](https://en.cppreference.com/w/cpp/thread/condition_variable)
+- [Wikipedia — Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method)
+
+---
+
 ## Level 6 — Live Data & Networking
 
 **Goal:** base recommendations and simulations on real fund data.
 
-**Concepts:** HTTP/REST, status codes, timeouts and failure handling · JSON parsing · caching and offline fallback · volatility, Sharpe ratio, maximum drawdown
+**Concepts:** HTTP/REST, status codes, timeouts and failure handling · JSON parsing · caching and offline fallback · LRU cache (hash map + doubly linked list) · volatility, Sharpe ratio, maximum drawdown
 
 **Tasks**
 - [ ] Fetch NAV history from [mfapi.in](https://www.mfapi.in/) with `cpr`
 - [ ] Parse responses with `nlohmann/json` into plain structs
 - [ ] Cache in SQLite; work offline from the cache; refresh when stale
+- [ ] In-memory LRU cache (hash map + doubly linked list, O(1) get and put) in front of the SQLite cache for recently viewed funds; tests for eviction order
 - [ ] Compute annualised return, volatility, Sharpe ratio and maximum drawdown from real NAV data
-- [ ] Feed the real mean and volatility into the Monte Carlo engine (replacing Level 4's assumptions)
+- [ ] Feed the real mean and volatility into the Monte Carlo engine (replacing Level 5's assumptions)
 - [ ] Tests use saved JSON fixtures — no network access in tests
 
 **Resources**
@@ -193,15 +195,24 @@ A level is done only when all of these are true:
 
 ---
 
-## Level 7 — Reports
+## Level 7 — REST API Server
 
-**Goal:** output a user can keep or share.
+**Goal:** serve the same core library over HTTP, so other programs can use it.
+
+**Concepts:** HTTP methods and status codes · REST endpoint design · JSON request and response bodies · input validation · handlers running on several threads at once · integration testing · load testing
 
 **Tasks**
-- [ ] Self-contained HTML report: summary, allocation, projection table, simulation percentiles
-- [ ] Print-friendly CSS (`@media print`)
-- [ ] Escape user-provided text in the HTML
-- [ ] Tests on the generated output
+- [ ] `mutualmind_server` executable using `cpp-httplib`, linked to `mutualmind_core` (no logic duplicated in the server)
+- [ ] Endpoints with JSON bodies: `GET /health`, `POST /risk-profile`, `POST /sip-projection`, `POST /simulation`
+- [ ] Validate input: `400` with a JSON error message for bad input, `404` for unknown routes, `500` only for real server bugs
+- [ ] Make handlers safe to run at the same time — no shared mutable state, or protect it with a mutex
+- [ ] Integration tests: start the server on a free port inside the test and call it with the `cpp-httplib` client
+- [ ] Load-test with a tool such as `hey`; record requests per second and the machine
+
+**Resources**
+- [cpp-httplib](https://github.com/yhirose/cpp-httplib)
+- [MDN — HTTP request methods](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods)
+- [MDN — HTTP response status codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
 
 ---
 
