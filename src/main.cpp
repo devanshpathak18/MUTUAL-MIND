@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <cmath>
 #include <string>
 #include <memory>
 
@@ -48,11 +49,11 @@ static void displayProfile(const RiskProfile& profile, double amount) {
     cout << "\n--------------------------------------------\n";
     cout << "        RECOMMENDED ALLOCATION              \n";
     cout << "--------------------------------------------\n";
-    cout << "  Equity Funds  -> " << (int)(profile.equityPct * 100) << "%"
+    cout << "  Equity Funds  -> " << std::lround(profile.equityPct * 100) << "%"
          << "  (Rs. " << amount * profile.equityPct << " / month)\n";
-    cout << "  Debt Funds    -> " << (int)(profile.debtPct * 100) << "%"
+    cout << "  Debt Funds    -> " << std::lround(profile.debtPct * 100) << "%"
          << "  (Rs. " << amount * profile.debtPct   << " / month)\n";
-    cout << "  Gold / Liquid -> " << (int)(profile.goldPct * 100) << "%"
+    cout << "  Gold / Liquid -> " << std::lround(profile.goldPct * 100) << "%"
          << "  (Rs. " << amount * profile.goldPct   << " / month)\n";
     cout << "--------------------------------------------\n";
 }
